@@ -6,10 +6,22 @@ import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { type Driver } from '@/types'
 import DriverCard from '@/components/drivers/card'
+import { useSession } from '@supabase/auth-helpers-react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const AdminPage: NextPage = () => {
+  const session = useSession()
+
+  const router = useRouter()
+  useEffect(() => {
+    if (session === null) {
+      router.push('/')
+    }
+  }, [session])
+
   const { data, isLoading } = useQuery(['drivers'], async () => {
     const { data } = await axios.get<Driver[]>('/api/drivers')
     return data

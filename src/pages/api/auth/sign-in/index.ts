@@ -8,7 +8,7 @@ const handler = async (
   const supabase = createServerSupabaseClient({ req, res })
 
   if (req.method === 'POST') {
-    const { email } = req.body.email
+    const { email } = req.body
 
     // Check if this email is an admin email
     const { data: admin, error: adminError } = await supabase.from('admin_emails')

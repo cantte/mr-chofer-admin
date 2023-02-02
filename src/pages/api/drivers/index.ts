@@ -16,7 +16,7 @@ const handler = async (
     }
 
     const { data, error } = await supabase.from('drivers')
-      .select()
+      .select('*, vehicles(*)')
       .eq('status', DriverStatus.pending)
       .order('created_at', { ascending: false })
       .limit(20)

@@ -4,6 +4,21 @@ export enum DriverStatus {
   rejected = 'rejected'
 }
 
+export type Vehicle = {
+  license_plate: string
+  engine_displacement: string
+  brand: string
+  model: string
+  line: string
+  color: string
+  type: string
+
+  property_card_photo_url_front: string
+  property_card_photo_url_back: string
+
+  created_at: string
+}
+
 export type Driver = {
   id: string
   name: string
@@ -21,4 +36,7 @@ export type Driver = {
 
   created_at: string
   updated_at: string
+
+  vehicles: Vehicle[]
+  vehicle?: Vehicle
 }

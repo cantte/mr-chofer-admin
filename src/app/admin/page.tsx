@@ -24,7 +24,10 @@ const AdminPage: NextPage = () => {
 
   const { data, isLoading } = useQuery(['drivers'], async () => {
     const { data } = await axios.get<Driver[]>('/api/drivers')
-    return data
+    return data.map(driver => ({
+      ...driver,
+      vehicle: driver.vehicles.at(0)
+    }))
   })
 
   return (

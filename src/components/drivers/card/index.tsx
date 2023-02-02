@@ -64,7 +64,9 @@ const DriverCard: FC<Props> = ({ driver }) => {
       driver.id_photo_url_front,
       driver.id_photo_url_back,
       driver.license_photo_url_front,
-      driver.license_photo_url_back
+      driver.license_photo_url_back,
+      driver.vehicle?.property_card_photo_url_front ?? '',
+      driver.vehicle?.property_card_photo_url_back ?? ''
     ])
   }, [avatarUrl])
 
@@ -115,6 +117,18 @@ const DriverCard: FC<Props> = ({ driver }) => {
           <span className="text-base text-gray-700 dark:text-gray-400">
             Ciudad: {driver.city}
           </span>
+
+          <div>
+            <div className="flex flex-row pt-3 space-x-5">
+              <p className="text-gray-900 dark:text-gray-300">
+                {driver.vehicle?.brand}, {driver.vehicle?.line} {driver.vehicle?.model} -
+                CC {driver.vehicle?.engine_displacement}
+              </p>
+              <span className="text-base text-gray-700 dark:text-gray-400">
+                Placa: {driver.vehicle?.license_plate}
+              </span>
+            </div>
+          </div>
         </div>
 
         <div className="flex flex-col space-y-3">
@@ -147,6 +161,22 @@ const DriverCard: FC<Props> = ({ driver }) => {
               href={signedUrls.at(3)}
               target="_blank" rel="noreferrer">
               Foto de licencia (Atras)
+            </a>
+          </div>
+
+          <div className="flex flex-row space-x-3 justify-between">
+            <a
+              className="text-xs text-gray-700 dark:text-gray-400 underline"
+              href={signedUrls.at(4)}
+              target="_blank" rel="noreferrer">
+              Foto de tarjeta de propiedad (Frontal)
+            </a>
+
+            <a
+              className="text-xs text-gray-700 dark:text-gray-400 underline"
+              href={signedUrls.at(5)}
+              target="_blank" rel="noreferrer">
+              Foto de tarjeta de propiedad (Atras)
             </a>
           </div>
         </div>

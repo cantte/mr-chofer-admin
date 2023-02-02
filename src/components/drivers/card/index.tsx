@@ -1,7 +1,9 @@
 import { type FC, useEffect, useState } from 'react'
-import { type Driver } from '@/types'
+import { type Driver, DriverStatus } from '@/types'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import Image from 'next/image'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
 
 type Props = {
   driver: Driver
@@ -66,6 +68,29 @@ const DriverCard: FC<Props> = ({ driver }) => {
     ])
   }, [avatarUrl])
 
+  const queryClient = useQueryClient()
+  const { mutate } = useMutation(async (data: { driver_id: string, status: DriverStatus }) => {
+    await axios.post(`/api/drivers/process/${data.driver_id}?status=${data.status}`)
+  }, {
+    onSuccess: () => {
+      void queryClient.invalidateQueries(['drivers'])
+    }
+  })
+
+  const performAccept = () => {
+    mutate({
+      driver_id: driver.id,
+      status: DriverStatus.accepted
+    })
+  }
+
+  const performReject = () => {
+    mutate({
+      driver_id: driver.id,
+      status: DriverStatus.rejected
+    })
+  }
+
   return (
     <div
       className="bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 rounded-lg shadow">
@@ -128,10 +153,18 @@ const DriverCard: FC<Props> = ({ driver }) => {
 
         <div className="m-auto flex-1">
           <div className="flex justify-end">
-            <button
-              className="w-auto text-lg px-4 py-3 mt-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
-              Aceptar conductor
-            </button>
+            <div className="flex flex-col">
+              <button
+                onClick={performAccept}
+                className="w-auto px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
+                Aceptar
+              </button>
+              <button
+                onClick={performReject}
+                className="w-auto px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
+                Rechazar
+              </button>
+            </div>
           </div>
         </div>
       </div>

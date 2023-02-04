@@ -1,3 +1,5 @@
+'use client'
+
 import { type FC, useEffect, useState } from 'react'
 import { type Driver, DriverStatus } from '@/types'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'

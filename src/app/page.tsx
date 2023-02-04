@@ -1,10 +1,12 @@
+'use client'
+
 import { Inter } from '@next/font/google'
-import { type NextPage } from 'next'
 import SignInForm from '@/components/auth/sign-in'
+import { type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const Home: NextPage = () => {
+const Home: FC = () => {
   return (
     <main className={inter.className}>
       <h1 className="text-4xl font-bold dark:text-gray-200">

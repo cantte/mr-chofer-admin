@@ -1,18 +1,17 @@
 'use client'
 
-import { type NextPage } from 'next'
 import { Inter } from '@next/font/google'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { type Driver } from '@/types'
 import DriverCard from '@/components/drivers/card'
 import { useSession } from '@supabase/auth-helpers-react'
-import { useEffect } from 'react'
+import { type FC, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
-const AdminPage: NextPage = () => {
+const AdminPage: FC = () => {
   const session = useSession()
 
   const router = useRouter()

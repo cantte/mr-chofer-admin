@@ -73,7 +73,7 @@ const DriverCard: FC<Props> = ({ driver }) => {
   }, [avatarUrl])
 
   const queryClient = useQueryClient()
-  const { mutate } = useMutation(async (data: { driver_id: string, status: DriverStatus }) => {
+  const { mutate, isLoading } = useMutation(async (data: { driver_id: string, status: DriverStatus }) => {
     await axios.post(`/api/drivers/process/${data.driver_id}?status=${data.status}`)
   }, {
     onSuccess: () => {
@@ -92,6 +92,13 @@ const DriverCard: FC<Props> = ({ driver }) => {
     mutate({
       driver_id: driver.id,
       status: DriverStatus.rejected
+    })
+  }
+
+  const performArchive = () => {
+    mutate({
+      driver_id: driver.id,
+      status: DriverStatus.archived
     })
   }
 
@@ -192,19 +199,27 @@ const DriverCard: FC<Props> = ({ driver }) => {
             <div className="flex flex-col">
               <button
                 onClick={performAccept}
-                className="w-auto px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
+                disabled={isLoading}
+                className="px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
                 Aceptar
               </button>
               <button
                 onClick={performReject}
-                className="w-auto px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
+                disabled={isLoading}
+                className="px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
                 Rechazar
+              </button>
+              <button
+                onClick={performArchive}
+                disabled={isLoading}
+                className="px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 focus:bg-yellow-600 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
+                Archivar
               </button>
 
               <a
                 href={`https://wa.me/+57${driver.phone}`}
                 target="_blank" rel="noreferrer"
-                className="w-auto px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
+                className="px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-green-600 text-white hover:bg-green-700 focus:bg-green-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed">
                 <span>
                   <svg width="20xp" height="20px" viewBox="0 0 256 258"
                        version="1.1" xmlns="http://www.w3.org/2000/svg"

@@ -1,7 +1,8 @@
 export enum DriverStatus {
   pending = 'pending',
   accepted = 'accepted',
-  rejected = 'rejected'
+  rejected = 'rejected',
+  archived = 'archived',
 }
 
 export type Vehicle = {

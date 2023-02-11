@@ -43,8 +43,6 @@ const AdminPage: FC = () => {
     router.refresh()
   }
 
-  console.log('data', data, isLoading, filter)
-
   return (
     <main className={inter.className}>
       <nav className="shadow bg-transparent">
@@ -103,6 +101,16 @@ const AdminPage: FC = () => {
             }>
             Rechazados
           </Tab>
+          <Tab
+            onClick={() => {
+              setFilter(DriverStatus.archived)
+            }}
+            className={
+              ({ selected }) => classNames('inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300',
+                selected && 'text-blue-600 border-b-2 border-blue-600')
+            }>
+            Archivados
+          </Tab>
         </Tab.List>
         <Tab.Panels>
           <Tab.Panel className="p-3">
@@ -118,6 +126,25 @@ const AdminPage: FC = () => {
                   {
                     data.map(driver => (
                       <DriverCard key={driver.id} driver={driver}/>
+                    ))
+                  }
+                </div>
+              )
+            }
+          </Tab.Panel>
+          <Tab.Panel className="p-3">
+            {
+              isLoading && (
+                <div>Cargando...</div>
+              )
+            }
+            {
+              !isLoading && data !== undefined && (
+                <div
+                  className="flex flex-col space-y-3">
+                  {
+                    data.map(driver => (
+                      <SimpleDriverCard key={driver.id} driver={driver}/>
                     ))
                   }
                 </div>

@@ -37,6 +37,6 @@ export type Driver = {
   created_at: string
   updated_at: string
 
-  vehicles: Vehicle
+  vehicles: Vehicle | null
   vehicle?: Vehicle
 }

@@ -60,17 +60,21 @@ const SimpleDriverCard: FC<Props> = ({ driver }) => {
             Ciudad: {driver.city}
           </span>
 
-          <div>
-            <div className="flex flex-row pt-3 space-x-5">
-              <p className="text-gray-900 dark:text-gray-300">
-                {driver.vehicles.brand}, {driver.vehicles.line} {driver.vehicles.model} -
-                CC {driver.vehicles.engine_displacement}
-              </p>
-              <span className="text-base text-gray-700 dark:text-gray-400">
+          {
+            driver.vehicles !== null && (
+              <div>
+                <div className="flex flex-row pt-3 space-x-5">
+                  <p className="text-gray-900 dark:text-gray-300">
+                    {driver.vehicles.brand}, {driver.vehicles.line} {driver.vehicles.model} -
+                    CC {driver.vehicles.engine_displacement}
+                  </p>
+                  <span className="text-base text-gray-700 dark:text-gray-400">
                 Placa: {driver.vehicles.license_plate}
               </span>
-            </div>
-          </div>
+                </div>
+              </div>
+            )
+          }
         </div>
 
         <div className="m-auto flex-1">

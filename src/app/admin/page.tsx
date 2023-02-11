@@ -1,7 +1,7 @@
 'use client'
 
 import { Inter } from '@next/font/google'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { type Driver, DriverStatus } from '@/types'
 import { useSession } from '@supabase/auth-helpers-react'
@@ -32,6 +32,11 @@ const AdminPage: FC = () => {
     const { data } = await axios.get<Driver[]>(`/api/drivers?status=${filter}`)
     return data
   })
+
+  const queryClient = useQueryClient()
+  const onUpdated = async () => {
+    await queryClient.refetchQueries(['drivers', filter])
+  }
 
   const { mutate } = useMutation(async () => {
     const { data } = await axios.post('/api/auth/sign-out')
@@ -125,7 +130,7 @@ const AdminPage: FC = () => {
                   className="flex flex-col space-y-3">
                   {
                     data.map(driver => (
-                      <DriverCard key={driver.id} driver={driver}/>
+                      <DriverCard key={driver.id} driver={driver} onUpdated={onUpdated}/>
                     ))
                   }
                 </div>

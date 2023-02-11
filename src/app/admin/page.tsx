@@ -30,10 +30,7 @@ const AdminPage: FC = () => {
   const [filter, setFilter] = useState<DriverStatus>(DriverStatus.pending)
   const { data, isLoading } = useQuery(['drivers', filter], async () => {
     const { data } = await axios.get<Driver[]>(`/api/drivers?status=${filter}`)
-    return data.map(driver => ({
-      ...driver,
-      vehicle: driver.vehicles.at(0)
-    }))
+    return data
   })
 
   const { mutate } = useMutation(async () => {
@@ -45,6 +42,8 @@ const AdminPage: FC = () => {
     mutate()
     router.refresh()
   }
+
+  console.log('data', data, isLoading, filter)
 
   return (
     <main className={inter.className}>

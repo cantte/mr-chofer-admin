@@ -19,7 +19,7 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
 
   const supabase = useSupabaseClient()
 
-  async function downloadImage (path: string) {
+  async function downloadImage(path: string) {
     try {
       const { data, error } = await supabase.storage
         .from('avatars')
@@ -35,7 +35,7 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
     }
   }
 
-  async function loadDocumentsUrls (documents: string[]) {
+  async function loadDocumentsUrls(documents: string[]) {
     if (documents.length === 0) {
       return
     }
@@ -68,12 +68,14 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
       driver.license_photo_url_front,
       driver.license_photo_url_back,
       driver.vehicles?.property_card_photo_url_front ?? '',
-      driver.vehicles?.property_card_photo_url_back ?? ''
+      driver.vehicles?.property_card_photo_url_back ?? '',
+      driver.contract_url ?? '',
+      driver.notary_power_url ?? ''
     ])
   }, [avatarUrl])
 
   const { mutate, isLoading } = useMutation(
-    async (data: { driver_id: string, status: DriverStatus }) => {
+    async (data: { driver_id: string; status: DriverStatus }) => {
       await axios.post(
         `/api/drivers/process/${data.driver_id}?status=${data.status}`
       )
@@ -208,6 +210,30 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
             >
               Foto de tarjeta de propiedad (Atras)
             </a>
+          </div>
+
+          <div className='flex flex-row space-x-3 justify-between'>
+            {driver.contract_url !== null && (
+              <a
+                className='text-xs text-gray-700 dark:text-gray-400 underline'
+                href={signedUrls.at(6)}
+                target='_blank'
+                rel='noreferrer'
+              >
+                Contrato
+              </a>
+            )}
+
+            {driver.notary_power_url !== null && (
+              <a
+                className='text-xs text-gray-700 dark:text-gray-400 underline'
+                href={signedUrls.at(7)}
+                target='_blank'
+                rel='noreferrer'
+              >
+                Poder notarial
+              </a>
+            )}
           </div>
         </div>
 

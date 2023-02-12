@@ -35,6 +35,9 @@ export type Driver = {
   id_photo_url_back: string
   license_photo_url_back: string
 
+  contract_url: string | null
+  notary_power_url: string | null
+
   created_at: string
   updated_at: string
 

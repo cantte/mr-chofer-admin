@@ -19,7 +19,7 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
 
   const supabase = useSupabaseClient()
 
-  async function downloadImage(path: string) {
+  async function downloadImage (path: string) {
     try {
       const { data, error } = await supabase.storage
         .from('avatars')
@@ -35,7 +35,7 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
     }
   }
 
-  async function loadDocumentsUrls(documents: string[]) {
+  async function loadDocumentsUrls (documents: string[]) {
     if (documents.length === 0) {
       return
     }
@@ -75,7 +75,7 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
   }, [avatarUrl])
 
   const { mutate, isLoading } = useMutation(
-    async (data: { driver_id: string; status: DriverStatus }) => {
+    async (data: { driver_id: string, status: DriverStatus }) => {
       await axios.post(
         `/api/drivers/process/${data.driver_id}?status=${data.status}`
       )
@@ -239,7 +239,7 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
 
         <div className='m-auto flex-1'>
           <div className='flex justify-end'>
-            <div className='flex flex-col'>
+            <div className='flex flex-col items-center'>
               <button
                 onClick={performAccept}
                 disabled={isLoading}
@@ -314,6 +314,19 @@ const DriverCard: FC<Props> = ({ driver, onUpdated }) => {
                       ></path>
                     </g>
                   </svg>
+                </span>
+              </a>
+
+              <a href={`tel:${driver.phone}`} className="mt-2">
+                <span className='text-gray-900 dark:text-gray-200'>
+                  <svg
+                    width="30px"
+                    height="30px"
+                    className='fill-current'
+                    viewBox="0 96 960 960">
+                      <path
+                        d="M795 936q-122 0-242.5-60T336 720q-96-96-156-216.5T120 261q0-19 13-32t32-13h140q14 0 24.5 9.5T343 251l27 126q2 14-.5 25.5T359 422L259 523q56 93 125.5 162T542 802l95-98q10-11 23-15.5t26-1.5l119 26q15 3 25 15t10 28v135q0 19-13 32t-32 13Z"></path>
+                    </svg>
                 </span>
               </a>
             </div>

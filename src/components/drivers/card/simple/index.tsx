@@ -79,7 +79,7 @@ const SimpleDriverCard: FC<Props> = ({ driver }) => {
 
         <div className="m-auto flex-1">
           <div className="flex justify-end">
-            <div className="flex flex-col">
+            <div className="flex flex-col justify-center items-center space-y-3">
               <a
                 href={`https://wa.me/+57${driver.phone}`}
                 target="_blank" rel="noreferrer"
@@ -116,6 +116,19 @@ const SimpleDriverCard: FC<Props> = ({ driver }) => {
                               fill="#FFFFFF"></path>
                         </g>
                   </svg>
+                </span>
+              </a>
+
+              <a href={`tel:${driver.phone}`}>
+                <span className='text-gray-900 dark:text-gray-200'>
+                  <svg
+                    width="30px"
+                    height="30px"
+                    className='fill-current'
+                    viewBox="0 96 960 960">
+                      <path
+                        d="M795 936q-122 0-242.5-60T336 720q-96-96-156-216.5T120 261q0-19 13-32t32-13h140q14 0 24.5 9.5T343 251l27 126q2 14-.5 25.5T359 422L259 523q56 93 125.5 162T542 802l95-98q10-11 23-15.5t26-1.5l119 26q15 3 25 15t10 28v135q0 19-13 32t-32 13Z"></path>
+                    </svg>
                 </span>
               </a>
             </div>

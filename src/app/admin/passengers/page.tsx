@@ -121,10 +121,17 @@ const PassengersPage: FC = () => {
                   <td className='px-6 py-4'>{passenger.phone}</td>
                   <td className='px-6 py-4'>
                     <a
-                      href='#'
+                      href={`tel:${passenger.phone}`}
                       className='font-medium text-blue-600 dark:text-blue-500 hover:underline'
                     >
                       Llamar
+                    </a>
+
+                    <a
+                      href={`https://wa.me/${passenger.phone}`}
+                      className='font-medium text-green-600 dark:text-green-500 hover:underline ml-2'
+                    >
+                      WhatsApp
                     </a>
                   </td>
                 </tr>

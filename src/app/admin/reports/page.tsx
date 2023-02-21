@@ -51,6 +51,13 @@ const ReportsPage: FC = () => {
                     Conductores
                   </NextLink>
 
+                  <NextLink
+                    href='/admin/passengers'
+                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
+                  >
+                    Pasajeros
+                  </NextLink>
+
                   <button
                     onClick={signOut}
                     className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'

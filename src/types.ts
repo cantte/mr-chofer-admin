@@ -48,3 +48,14 @@ export type Driver = {
 export type Report = {
   rides: number
 }
+
+export type Passenger = {
+  name: string
+  phone: string
+}
+
+export type PassengersTableData = {
+  passengers: Passenger[]
+  total: number
+  totalPages: number
+}

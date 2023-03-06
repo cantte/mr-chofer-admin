@@ -1,5 +1,5 @@
-import { type NextApiRequest, type NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { type NextApiRequest, type NextApiResponse } from 'next'
 
 const handler = async (
   req: NextApiRequest,
@@ -16,6 +16,7 @@ const handler = async (
     }
 
     res.status(200).json({ message: 'Signed out' })
+    return
   }
 
   res.status(405).json({ error: 'Method not allowed' })

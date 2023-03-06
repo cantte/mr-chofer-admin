@@ -54,6 +54,12 @@ export type Passenger = {
   phone: string
 }
 
+export type Ride = {
+  id: string
+  request_time: string
+  status: string
+}
+
 export type PassengersTableData = {
   passengers: Passenger[]
   total: number

@@ -1,16 +1,16 @@
 'use client'
 
-import { Inter } from '@next/font/google'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import axios from 'axios'
-import { type Driver, DriverStatus } from '@/types'
-import { useSession } from '@supabase/auth-helpers-react'
-import { type FC, useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Tab } from '@headlessui/react'
 import DriverCard from '@/components/drivers/card'
 import SimpleDriverCard from '@/components/drivers/card/simple'
+import { DriverStatus, type Driver } from '@/types'
+import { Tab } from '@headlessui/react'
+import { Inter } from '@next/font/google'
+import { useSession } from '@supabase/auth-helpers-react'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import axios from 'axios'
 import NextLink from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState, type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -65,10 +65,10 @@ const AdminPage: FC = () => {
                   </NextLink>
 
                   <NextLink
-                    href='/admin/passengers'
+                    href='/admin/rides'
                     className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
                   >
-                    Pasajeros
+                    Solicitudes
                   </NextLink>
 
                   <button

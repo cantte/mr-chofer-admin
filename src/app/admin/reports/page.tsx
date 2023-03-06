@@ -1,13 +1,13 @@
 'use client'
 
-import { type FC, useEffect } from 'react'
+import { type Report } from '@/types'
 import { Inter } from '@next/font/google'
 import { useSession } from '@supabase/auth-helpers-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
-import NextLink from 'next/link'
 import axios from 'axios'
-import { type Report } from '@/types'
+import NextLink from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useEffect, type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -52,10 +52,10 @@ const ReportsPage: FC = () => {
                   </NextLink>
 
                   <NextLink
-                    href='/admin/passengers'
+                    href='/admin/rides'
                     className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
                   >
-                    Pasajeros
+                    Solicitudes
                   </NextLink>
 
                   <button

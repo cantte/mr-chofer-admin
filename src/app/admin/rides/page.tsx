@@ -2,7 +2,6 @@
 
 import { type Ride } from '@/types'
 import { Inter } from '@next/font/google'
-import { useSession } from '@supabase/auth-helpers-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
   flexRender,
@@ -14,19 +13,12 @@ import {
 import axios from 'axios'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useMemo, useState, type FC } from 'react'
+import { useMemo, useState, type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const RidesPage: FC = () => {
-  const session = useSession()
-
   const router = useRouter()
-  useEffect(() => {
-    if (session === null) {
-      router.push('/')
-    }
-  }, [session])
 
   const columns = useMemo<Array<ColumnDef<Ride>>>(
     () => [

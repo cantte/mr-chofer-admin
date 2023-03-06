@@ -5,12 +5,11 @@ import SimpleDriverCard from '@/components/drivers/card/simple'
 import { DriverStatus, type Driver } from '@/types'
 import { Tab } from '@headlessui/react'
 import { Inter } from '@next/font/google'
-import { useSession } from '@supabase/auth-helpers-react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState, type FC } from 'react'
+import { useState, type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,14 +18,7 @@ function classNames (...classes: Array<string | boolean>) {
 }
 
 const AdminPage: FC = () => {
-  const session = useSession()
-
   const router = useRouter()
-  useEffect(() => {
-    if (session === null) {
-      router.push('/')
-    }
-  }, [session])
 
   const [filter, setFilter] = useState<DriverStatus>(DriverStatus.pending)
   const { data, isLoading } = useQuery(['drivers', filter], async () => {

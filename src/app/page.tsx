@@ -1,7 +1,7 @@
 'use client'
 
-import { Inter } from '@next/font/google'
 import SignInForm from '@/components/auth/sign-in'
+import { Inter } from '@next/font/google'
 import { type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })

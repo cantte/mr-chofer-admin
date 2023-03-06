@@ -2,24 +2,16 @@
 
 import { type Report } from '@/types'
 import { Inter } from '@next/font/google'
-import { useSession } from '@supabase/auth-helpers-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useEffect, type FC } from 'react'
+import { type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const ReportsPage: FC = () => {
-  const session = useSession()
-
   const router = useRouter()
-  useEffect(() => {
-    if (session === null) {
-      router.push('/')
-    }
-  }, [session])
 
   const { mutate } = useMutation(async () => {
     const { data } = await axios.post('/api/auth/sign-out')

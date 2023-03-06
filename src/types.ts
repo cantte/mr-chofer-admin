@@ -57,6 +57,9 @@ export type Passenger = {
 export type Ride = {
   id: string
   request_time: string
+  start_time: string
+  end_time: string
+  final_price: number
   status: string
 }
 

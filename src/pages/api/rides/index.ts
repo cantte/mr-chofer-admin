@@ -21,8 +21,10 @@ const handler = async (
     // Get today completed rides
     const { data, count, error } = await supabase
       .from('rides')
-      .select('id, request_time, status', { count: 'estimated' })
-      .eq('status', 'completed')
+      .select('id, request_time, status, start_time, end_time', {
+        count: 'estimated'
+      })
+      .in('status', ['completed', 'canceled'])
       .order('id', { ascending: false })
       .range(rawPage * rawPageSize, (rawPage + 1) * rawPageSize)
 

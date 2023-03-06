@@ -38,7 +38,66 @@ const RidesPage: FC = () => {
       {
         header: 'Hora de solicitud',
         accessorKey: 'request_time',
-        cell: info => info.getValue()
+        cell: info =>
+          Intl.DateTimeFormat('es-CO', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+            timeZone: 'America/Bogota'
+          }).format(
+            new Date(info.getValue() as string)
+          )
+      },
+      {
+        header: 'Hora de inicio del viaje',
+        accessorKey: 'start_time',
+        cell: info =>
+          Intl.DateTimeFormat('es-CO', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+            timeZone: 'America/Bogota'
+          }).format(
+            new Date(info.getValue() as string)
+          )
+      },
+      {
+        header: 'Hora de finalización del viaje',
+        accessorKey: 'end_time',
+        cell: info =>
+          Intl.DateTimeFormat('es-CO', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+            timeZone: 'America/Bogota'
+          }).format(
+            new Date(info.getValue() as string)
+          )
+      },
+      {
+        header: 'Tiempo de viaje',
+        cell: info => {
+          if (info.row.original.status === 'canceled') {
+            return 'N/A'
+          }
+          const start = new Date(info.row.original.start_time)
+          const end = new Date(info.row.original.end_time)
+          const diff = end.getTime() - start.getTime()
+          const minutes = Math.floor(diff / 60000)
+          const hours = Math.floor(minutes / 60)
+          return `${hours}h ${minutes % 60}m`
+        }
+      },
+      {
+        header: 'Tiempo de espera',
+        cell: info => {
+          if (info.row.original.status === 'canceled') {
+            return 'N/A'
+          }
+          const start = new Date(info.row.original.request_time)
+          const end = new Date(info.row.original.start_time)
+          const diff = end.getTime() - start.getTime()
+          const minutes = Math.floor(diff / 60000)
+          const hours = Math.floor(minutes / 60)
+          return `${hours}h ${minutes % 60}m`
+        }
       },
       {
         header: 'Estado',
@@ -209,12 +268,12 @@ const RidesPage: FC = () => {
               </svg>
             </button>
           </li>
-          {
-
-          }
+          {}
           <li>
             <button
-              onClick={() => { table.nextPage() }}
+              onClick={() => {
+                table.nextPage()
+              }}
               className='block px-3 py-2 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white'
             >
               <span className='sr-only'>Siguiente</span>

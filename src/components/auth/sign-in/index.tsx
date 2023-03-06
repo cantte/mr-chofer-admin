@@ -1,13 +1,12 @@
 'use client'
 
-import { type FC, useEffect } from 'react'
-import { z } from 'zod'
-import { type SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { useSession } from '@supabase/auth-helpers-react'
+import { type FC } from 'react'
+import { useForm, type SubmitHandler } from 'react-hook-form'
+import { z } from 'zod'
 
 const SignInSchema = z.object({
   email: z.string().email('El email no es válido'),
@@ -17,14 +16,7 @@ const SignInSchema = z.object({
 type SignInFormValues = z.infer<typeof SignInSchema>
 
 const SignInForm: FC = () => {
-  const session = useSession()
   const router = useRouter()
-
-  useEffect(() => {
-    if (session !== null) {
-      router.push('/admin')
-    }
-  }, [session])
 
   const {
     register,

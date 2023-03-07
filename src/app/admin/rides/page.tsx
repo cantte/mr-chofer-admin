@@ -35,9 +35,7 @@ const RidesPage: FC = () => {
             dateStyle: 'short',
             timeStyle: 'short',
             timeZone: 'America/Bogota'
-          }).format(
-            new Date(info.getValue() as string)
-          )
+          }).format(new Date(info.getValue() as string))
       },
       {
         header: 'Pasajero',
@@ -47,7 +45,7 @@ const RidesPage: FC = () => {
       {
         header: 'Genero',
         accessorKey: 'gender',
-        cell: info => info.getValue() === 'Male' ? 'Hombre' : 'Mujer'
+        cell: info => (info.getValue() === 'Male' ? 'Hombre' : 'Mujer')
       },
       {
         header: 'Conductor',
@@ -57,12 +55,13 @@ const RidesPage: FC = () => {
       {
         header: 'Aliado',
         accessorKey: 'affiliate_id',
-        cell: info => info.getValue() !== null ? 'Sí' : 'No'
+        cell: info => (info.getValue() !== null ? 'Sí' : 'No')
       },
       {
         header: 'Estado',
         accessorKey: 'status',
-        cell: info => info.getValue() === 'completed' ? 'Completado' : 'Cancelado'
+        cell: info =>
+          info.getValue() === 'completed' ? 'Completado' : 'Cancelado'
       }
     ],
     []
@@ -186,6 +185,9 @@ const RidesPage: FC = () => {
         <tbody>
           {table.getRowModel().rows.map(row => (
             <tr
+              onClick={() => {
+                router.push(`/admin/rides/${row.original.id}`)
+              }}
               key={row.id}
               className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
             >

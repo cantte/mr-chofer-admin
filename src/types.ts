@@ -75,10 +75,26 @@ export type PassengersTableData = {
 
 export type RideHistory = {
   id: string
+
+  pickup_location: string
+  destination: string
+
+  final_price: number
+
   request_time: string
+  start_time: string
+  end_time: string
+
   gender: string
+  comments: string
   affiliate_id: string
   status: string
-  passengers?: OnlyName
-  drivers?: OnlyName
+
+  passengers?: OnlyName & {
+    phone: string
+  }
+  drivers?: OnlyName & {
+    vehicles: Vehicle
+    phone: string
+  }
 }

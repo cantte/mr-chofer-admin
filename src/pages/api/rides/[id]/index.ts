@@ -14,28 +14,22 @@ const handler = async (
       return
     }
 
-    const { page, pageSize } = req.query
-    const rawPage = parseInt(page as string, 10)
-    const rawPageSize = parseInt(pageSize as string, 10)
+    const { id } = req.query
 
-    // Get today completed rides
-    const { data, count, error } = await supabase
+    const { data, error } = await supabase
       .from('ride_history')
-      .select('id, request_time, gender, affiliate_id, status, passengers:passenger_id(name), drivers:driver_id(name)', {
-        count: 'estimated'
-      })
-      .order('id', { ascending: false })
-      .range(rawPage * rawPageSize, (rawPage + 1) * rawPageSize)
+      .select(
+        'id, pickup_location, destination, final_price, comments, request_time, end_time, start_time, gender, affiliate_id, status, passengers:passenger_id(name, phone), drivers:driver_id(name, phone, vehicles(*))'
+      )
+      .eq('id', id)
+      .limit(1)
 
     if (error !== null) {
       res.status(500).json({ error: error.message })
       return
     }
 
-    res.status(200).json({
-      rides: data,
-      total: count
-    })
+    res.status(200).json(data[0])
   }
 }
 

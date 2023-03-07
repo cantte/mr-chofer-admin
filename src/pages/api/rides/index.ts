@@ -20,8 +20,8 @@ const handler = async (
 
     // Get today completed rides
     const { data, count, error } = await supabase
-      .from('rides')
-      .select('id, request_time, status, start_time, end_time', {
+      .from('ride_history')
+      .select('id, request_time, gender, affiliate_id, status, passengers:passenger_id(name), drivers:driver_id(name)', {
         count: 'estimated'
       })
       .in('status', ['completed', 'canceled'])

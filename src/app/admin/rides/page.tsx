@@ -1,6 +1,6 @@
 'use client'
 
-import { type Ride } from '@/types'
+import { type RideHistory } from '@/types'
 import { Inter } from '@next/font/google'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import {
@@ -20,7 +20,7 @@ const inter = Inter({ subsets: ['latin'] })
 const RidesPage: FC = () => {
   const router = useRouter()
 
-  const columns = useMemo<Array<ColumnDef<Ride>>>(
+  const columns = useMemo<Array<ColumnDef<RideHistory>>>(
     () => [
       {
         header: 'Id',
@@ -40,61 +40,29 @@ const RidesPage: FC = () => {
           )
       },
       {
-        header: 'Hora de inicio del viaje',
-        accessorKey: 'start_time',
-        cell: info =>
-          Intl.DateTimeFormat('es-CO', {
-            dateStyle: 'short',
-            timeStyle: 'short',
-            timeZone: 'America/Bogota'
-          }).format(
-            new Date(info.getValue() as string)
-          )
+        header: 'Pasajero',
+        accessorKey: 'passengers.name',
+        cell: info => info.getValue()
       },
       {
-        header: 'Hora de finalización del viaje',
-        accessorKey: 'end_time',
-        cell: info =>
-          Intl.DateTimeFormat('es-CO', {
-            dateStyle: 'short',
-            timeStyle: 'short',
-            timeZone: 'America/Bogota'
-          }).format(
-            new Date(info.getValue() as string)
-          )
+        header: 'Genero',
+        accessorKey: 'gender',
+        cell: info => info.getValue() === 'Male' ? 'Hombre' : 'Mujer'
       },
       {
-        header: 'Tiempo de viaje',
-        cell: info => {
-          if (info.row.original.status === 'canceled') {
-            return 'N/A'
-          }
-          const start = new Date(info.row.original.start_time)
-          const end = new Date(info.row.original.end_time)
-          const diff = end.getTime() - start.getTime()
-          const minutes = Math.floor(diff / 60000)
-          const hours = Math.floor(minutes / 60)
-          return `${hours}h ${minutes % 60}m`
-        }
+        header: 'Conductor',
+        accessorKey: 'drivers.name',
+        cell: info => info.getValue()
       },
       {
-        header: 'Tiempo de espera',
-        cell: info => {
-          if (info.row.original.status === 'canceled') {
-            return 'N/A'
-          }
-          const start = new Date(info.row.original.request_time)
-          const end = new Date(info.row.original.start_time)
-          const diff = end.getTime() - start.getTime()
-          const minutes = Math.floor(diff / 60000)
-          const hours = Math.floor(minutes / 60)
-          return `${hours}h ${minutes % 60}m`
-        }
+        header: 'Aliado',
+        accessorKey: 'affiliate_id',
+        cell: info => info.getValue() !== null ? 'Sí' : 'No'
       },
       {
         header: 'Estado',
         accessorKey: 'status',
-        cell: info => info.getValue()
+        cell: info => info.getValue() === 'completed' ? 'Completado' : 'Cancelado'
       }
     ],
     []
@@ -127,6 +95,7 @@ const RidesPage: FC = () => {
       keepPreviousData: true
     }
   )
+
   const defaultData = useMemo(() => [], [])
 
   const pagination = useMemo(

@@ -54,6 +54,10 @@ export type Passenger = {
   phone: string
 }
 
+export type OnlyName = {
+  name: string
+}
+
 export type Ride = {
   id: string
   request_time: string
@@ -67,4 +71,14 @@ export type PassengersTableData = {
   passengers: Passenger[]
   total: number
   totalPages: number
+}
+
+export type RideHistory = {
+  id: string
+  request_time: string
+  gender: string
+  affiliate_id: string
+  status: string
+  passengers?: OnlyName
+  drivers?: OnlyName
 }

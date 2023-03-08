@@ -50,7 +50,7 @@ const RidesPage: FC = () => {
       {
         header: 'Conductor',
         accessorKey: 'drivers.name',
-        cell: info => info.getValue()
+        cell: info => info.getValue() ?? 'No disponible'
       },
       {
         header: 'Aliado',
@@ -61,7 +61,7 @@ const RidesPage: FC = () => {
         header: 'Estado',
         accessorKey: 'status',
         cell: info =>
-          info.getValue() === 'completed' ? 'Completado' : 'Cancelado'
+          info.getValue() !== null ? info.getValue() : 'No disponible'
       }
     ],
     []

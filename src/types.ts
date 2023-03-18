@@ -50,8 +50,11 @@ export type Report = {
 }
 
 export type Passenger = {
+  id: string
   name: string
+  gender: string
   phone: string
+  created_at: string
 }
 
 export type OnlyName = {

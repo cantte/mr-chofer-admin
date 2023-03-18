@@ -27,10 +27,10 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
               <div className='block'>
                 <div className='flex items-baseline space-x-4'>
                   <NextLink
-                    href='/admin/reports'
+                    href='/admin/passengers'
                     className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
                   >
-                    Reportes
+                    Pasajeros
                   </NextLink>
 
                   <NextLink

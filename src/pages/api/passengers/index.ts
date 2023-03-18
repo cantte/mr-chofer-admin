@@ -1,5 +1,5 @@
-import { type NextApiRequest, type NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { type NextApiRequest, type NextApiResponse } from 'next'
 
 const handler = async (
   req: NextApiRequest,
@@ -14,13 +14,15 @@ const handler = async (
       return
     }
 
-    // const { page } = req.query
-    // const rawPage = parseInt(page as string, 10)
+    const { page, pageSize } = req.query
+    const rawPage = parseInt(page as string, 10)
+    const rawPageSize = parseInt(pageSize as string, 10)
 
     const { data, count, error } = await supabase
-      .from('completed_rides_passengers')
-      .select('*', { count: 'exact' })
-      // .range(rawPage * 10, rawPage * 10 + 10)
+      .from('passengers')
+      .select('id, name, gender, phone, created_at', { count: 'estimated' })
+      .order('created_at', { ascending: false })
+      .range(rawPage * rawPageSize, (rawPage + 1) * rawPageSize)
 
     if (error !== null) {
       res.status(500).json({ error: error.message })
@@ -29,8 +31,7 @@ const handler = async (
 
     res.status(200).json({
       passengers: data,
-      total: count,
-      totalPages: Math.ceil((count ?? 10) / 10)
+      total: count
     })
   }
 }

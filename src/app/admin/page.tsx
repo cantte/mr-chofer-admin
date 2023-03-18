@@ -5,10 +5,8 @@ import SimpleDriverCard from '@/components/drivers/card/simple'
 import { DriverStatus, type Driver } from '@/types'
 import { Tab } from '@headlessui/react'
 import { Inter } from '@next/font/google'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import NextLink from 'next/link'
-import { useRouter } from 'next/navigation'
 import { useState, type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -18,8 +16,6 @@ function classNames (...classes: Array<string | boolean>) {
 }
 
 const AdminPage: FC = () => {
-  const router = useRouter()
-
   const [filter, setFilter] = useState<DriverStatus>(DriverStatus.pending)
   const { data, isLoading } = useQuery(['drivers', filter], async () => {
     const { data } = await axios.get<Driver[]>(`/api/drivers?status=${filter}`)
@@ -31,51 +27,8 @@ const AdminPage: FC = () => {
     await queryClient.refetchQueries(['drivers', filter])
   }
 
-  const { mutate } = useMutation(async () => {
-    const { data } = await axios.post('/api/auth/sign-out')
-    return data
-  })
-
-  const signOut = async () => {
-    mutate()
-    router.refresh()
-  }
-
   return (
     <main className={inter.className}>
-      <nav className='bg-transparent'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-end h-16'>
-            <div className='flex items-center'>
-              <div className='block'>
-                <div className='flex items-baseline space-x-4'>
-                  <NextLink
-                    href='/admin/reports'
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                  >
-                    Reportes
-                  </NextLink>
-
-                  <NextLink
-                    href='/admin/rides'
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                  >
-                    Solicitudes
-                  </NextLink>
-
-                  <button
-                    onClick={signOut}
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                  >
-                    Cerrar sesión
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <h1 className='text-4xl font-bold dark:text-gray-200 mb-10'>
         Conductores
       </h1>

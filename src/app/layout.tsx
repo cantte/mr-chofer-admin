@@ -1,12 +1,14 @@
 'use client'
 
-import './globals.css'
-import { type FC, type PropsWithChildren, useState } from 'react'
+import { Inter } from '@next/font/google'
 import { createBrowserSupabaseClient } from '@supabase/auth-helpers-nextjs'
 import { SessionContextProvider } from '@supabase/auth-helpers-react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { useState, type FC, type PropsWithChildren } from 'react'
+import './globals.css'
 
 const queryClient = new QueryClient()
+const inter = Inter({ subsets: ['latin'] })
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   const [supabase] = useState(() => createBrowserSupabaseClient())
@@ -15,7 +17,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
     <html lang="en">
     <head/>
     <body>
-    <main className="lg:overflow-x-hidden">
+    <main className={inter.className}>
       <SessionContextProvider supabaseClient={supabase}>
         <QueryClientProvider client={queryClient}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

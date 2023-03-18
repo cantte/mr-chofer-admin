@@ -4,7 +4,6 @@ import { type RideHistory } from '@/types'
 import { Inter } from '@next/font/google'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import NextLink from 'next/link'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -38,25 +37,6 @@ const RideDetails = (props: Props) => {
 
   return (
     <main className={inter.className}>
-      <nav className='bg-transparent'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-end h-16'>
-            <div className='flex items-center'>
-              <div className='block'>
-                <div className='flex items-baseline space-x-4'>
-                  <NextLink
-                    href='/admin/rides'
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                  >
-                    Solicitudes
-                  </NextLink>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <h1 className='text-4xl font-bold dark:text-gray-200 mb-10'>
         Solicitud de viaje #{id}
       </h1>

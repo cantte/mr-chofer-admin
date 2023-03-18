@@ -2,27 +2,13 @@
 
 import { type Report } from '@/types'
 import { Inter } from '@next/font/google'
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import NextLink from 'next/link'
-import { useRouter } from 'next/navigation'
 import { type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 const ReportsPage: FC = () => {
-  const router = useRouter()
-
-  const { mutate } = useMutation(async () => {
-    const { data } = await axios.post('/api/auth/sign-out')
-    return data
-  })
-
-  const signOut = async () => {
-    mutate()
-    router.refresh()
-  }
-
   const { data, isLoading } = useQuery(['reports'], async () => {
     const { data } = await axios.get<Report>('/api/reports/today')
     return data
@@ -30,39 +16,6 @@ const ReportsPage: FC = () => {
 
   return (
     <main className={inter.className}>
-      <nav className='bg-transparent'>
-        <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-          <div className='flex items-center justify-end h-16'>
-            <div className='flex items-center'>
-              <div className='block'>
-                <div className='flex items-baseline space-x-4'>
-                  <NextLink
-                    href='/admin'
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                  >
-                    Conductores
-                  </NextLink>
-
-                  <NextLink
-                    href='/admin/rides'
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                  >
-                    Solicitudes
-                  </NextLink>
-
-                  <button
-                    onClick={signOut}
-                    className='bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium'
-                  >
-                    Cerrar sesión
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </nav>
-
       <h1 className='text-4xl font-bold dark:text-gray-200 mb-10'>Reportes</h1>
 
       <div className='flex flex-col'>

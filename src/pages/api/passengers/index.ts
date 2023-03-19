@@ -19,8 +19,8 @@ const handler = async (
     const rawPageSize = parseInt(pageSize as string, 10)
 
     const { data, count, error } = await supabase
-      .from('passengers')
-      .select('id, name, gender, phone, created_at', { count: 'estimated' })
+      .from('passengers_with_email')
+      .select('*', { count: 'estimated' })
       .order('created_at', { ascending: false })
       .range(rawPage * rawPageSize, (rawPage + 1) * rawPageSize)
 

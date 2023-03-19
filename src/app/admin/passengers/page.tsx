@@ -39,6 +39,11 @@ const PassengersPage: FC = () => {
         cell: info => info.getValue()
       },
       {
+        header: 'Email',
+        accessorKey: 'email',
+        cell: info => info.getValue()
+      },
+      {
         header: 'Fecha de creación',
         accessorKey: 'created_at',
         cell: info =>

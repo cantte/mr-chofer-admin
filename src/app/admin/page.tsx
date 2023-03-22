@@ -4,7 +4,7 @@ import { DriverStatus, type Driver } from '@/types'
 import { Tab } from '@headlessui/react'
 import { Inter } from '@next/font/google'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import {
   flexRender,
   getCoreRowModel,
@@ -156,10 +156,10 @@ const AdminPage: FC = () => {
     debugTable: true
   })
 
-  const queryClient = useQueryClient()
-  const onUpdated = async () => {
-    await queryClient.refetchQueries(['drivers', filter])
-  }
+  // const queryClient = useQueryClient()
+  // const onUpdated = async () => {
+  //  await queryClient.refetchQueries(['drivers', filter])
+  // }
 
   return (
     <main className={inter.className}>

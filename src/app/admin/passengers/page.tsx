@@ -24,6 +24,16 @@ const PassengersPage: FC = () => {
         cell: info => info.getValue()
       },
       {
+        header: 'Fecha de creación',
+        accessorKey: 'created_at',
+        cell: info =>
+          Intl.DateTimeFormat('es-CO', {
+            dateStyle: 'short',
+            timeStyle: 'short',
+            timeZone: 'America/Bogota'
+          }).format(new Date(info.getValue() as string))
+      },
+      {
         header: 'Nombre',
         accessorKey: 'name',
         cell: info => info.getValue()
@@ -42,16 +52,6 @@ const PassengersPage: FC = () => {
         header: 'Email',
         accessorKey: 'email',
         cell: info => info.getValue()
-      },
-      {
-        header: 'Fecha de creación',
-        accessorKey: 'created_at',
-        cell: info =>
-          Intl.DateTimeFormat('es-CO', {
-            dateStyle: 'short',
-            timeStyle: 'short',
-            timeZone: 'America/Bogota'
-          }).format(new Date(info.getValue() as string))
       }
     ],
     []

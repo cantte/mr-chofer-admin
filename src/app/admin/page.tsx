@@ -1,13 +1,19 @@
 'use client'
 
-import DriverCard from '@/components/drivers/card'
-import SimpleDriverCard from '@/components/drivers/card/simple'
 import { DriverStatus, type Driver } from '@/types'
 import { Tab } from '@headlessui/react'
 import { Inter } from '@next/font/google'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
+import {
+  flexRender,
+  getCoreRowModel,
+  useReactTable,
+  type ColumnDef,
+  type PaginationState
+} from '@tanstack/react-table'
 import axios from 'axios'
-import { useState, type FC } from 'react'
+import { useMemo, useState, type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -16,10 +22,138 @@ function classNames (...classes: Array<string | boolean>) {
 }
 
 const AdminPage: FC = () => {
+  const columns = useMemo<Array<ColumnDef<Driver>>>(
+    () => [
+      {
+        header: 'Foto',
+        accessorKey: 'photo_url',
+        cell: info => {
+          return (
+            <div className='flex items-center'>
+              <div className='flex-shrink-0 h-20 w-20'>
+                <img
+                  className='h-20 w-20 rounded-full'
+                  src={info.getValue() as string}
+                  alt=''
+                />
+              </div>
+            </div>
+          )
+        }
+      },
+      {
+        header: 'Cédula',
+        accessorKey: 'id',
+        cell: info => info.getValue()
+      },
+      {
+        header: 'Nombre',
+        accessorKey: 'name',
+        cell: info => info.getValue()
+      },
+      {
+        header: 'Celular',
+        accessorKey: 'phone',
+        cell: info => info.getValue()
+      },
+      {
+        header: 'Ciudad',
+        accessorKey: 'city',
+        cell: info => info.getValue()
+      },
+      {
+        header: 'Vehículo',
+        cell: info => {
+          const driver = info.row.original
+
+          if (driver.vehicles == null) {
+            return (
+              <span className='px-2 py-1 inline-flex text-md leading-5 font-semibold rounded-full bg-red-100 text-red-800'>
+                Sin vehículo
+              </span>
+            )
+          }
+
+          return (
+            <span className='px-2 py-1 inline-flex text-md leading-5 font-semibold rounded-full bg-green-100 text-green-800'>
+              {driver.vehicles.brand}, {driver.vehicles.line}{' '}
+              {driver.vehicles.model} - CC {driver.vehicles.engine_displacement}{' '}
+              - {driver.vehicles.license_plate}
+            </span>
+          )
+        }
+      }
+    ],
+    []
+  )
+
+  const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10
+  })
+
+  const fetchDataOptions = {
+    pageIndex,
+    pageSize
+  }
+
+  const supabase = useSupabaseClient()
+  const fetchDrivers = async (
+    filter: DriverStatus,
+    options: {
+      pageIndex: number
+      pageSize: number
+    }
+  ) => {
+    const { data } = await axios.get<Driver[]>(
+      `/api/drivers?status=${filter}&page=${options.pageIndex}&pageSize=${options.pageSize}`
+    )
+
+    const transformedData = data.map(driver => {
+      const { data: photoUrl } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(driver.photo_url)
+      return {
+        ...driver,
+        photo_url: photoUrl.publicUrl
+      }
+    })
+
+    return transformedData
+  }
+
   const [filter, setFilter] = useState<DriverStatus>(DriverStatus.pending)
-  const { data, isLoading } = useQuery(['drivers', filter], async () => {
-    const { data } = await axios.get<Driver[]>(`/api/drivers?status=${filter}`)
-    return data
+  const { data, isLoading } = useQuery(
+    ['drivers', filter],
+    async () => await fetchDrivers(filter, fetchDataOptions),
+    {
+      keepPreviousData: true
+    }
+  )
+
+  const defaultData = useMemo(() => [], [])
+
+  const pagination = useMemo(
+    () => ({
+      pageIndex,
+      pageSize
+    }),
+    [pageIndex, pageSize]
+  )
+
+  const table = useReactTable({
+    data: data ?? defaultData,
+    columns,
+    state: {
+      pagination,
+      columnVisibility: {
+        id: false
+      }
+    },
+    onPaginationChange: setPagination,
+    getCoreRowModel: getCoreRowModel(),
+    manualPagination: true,
+    debugTable: true
   })
 
   const queryClient = useQueryClient()
@@ -89,51 +223,51 @@ const AdminPage: FC = () => {
           </Tab>
         </Tab.List>
         <Tab.Panels>
-          <Tab.Panel className='p-3'>
-            {isLoading && <div>Cargando...</div>}
-            {!isLoading && data !== undefined && (
-              <div className='flex flex-col space-y-3'>
-                {data.map(driver => (
-                  <DriverCard
-                    key={driver.id}
-                    driver={driver}
-                    onUpdated={onUpdated}
-                  />
-                ))}
-              </div>
-            )}
-          </Tab.Panel>
-          <Tab.Panel className='p-3'>
-            {isLoading && <div>Cargando...</div>}
-            {!isLoading && data !== undefined && (
-              <div className='flex flex-col space-y-3'>
-                {data.map(driver => (
-                  <SimpleDriverCard key={driver.id} driver={driver} />
-                ))}
-              </div>
-            )}
-          </Tab.Panel>
-          <Tab.Panel className='p-3'>
-            {isLoading && <div>Cargando...</div>}
-            {!isLoading && data !== undefined && (
-              <div className='flex flex-col space-y-3'>
-                {data.map(driver => (
-                  <SimpleDriverCard key={driver.id} driver={driver} />
-                ))}
-              </div>
-            )}
-          </Tab.Panel>
-          <Tab.Panel className='p-3'>
-            {isLoading && <div>Cargando...</div>}
-            {!isLoading && data !== undefined && (
-              <div className='flex flex-col space-y-3'>
-                {data.map(driver => (
-                  <SimpleDriverCard key={driver.id} driver={driver} />
-                ))}
-              </div>
-            )}
-          </Tab.Panel>
+          <Tab.Panel className='p-3'></Tab.Panel>
+          <Tab.Panel className='p-3'></Tab.Panel>
+          <Tab.Panel className='p-3'></Tab.Panel>
+          <Tab.Panel className='p-3'></Tab.Panel>
         </Tab.Panels>
+
+        {isLoading && <div>Cargando...</div>}
+        {!isLoading && data !== undefined && (
+          <table className='w-full text-sm text-left text-gray-500 dark:text-gray-400'>
+            <thead className='text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
+              {table.getHeaderGroups().map(headerGroup => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map(header => (
+                    <th scope='col' className='px-6 py-3' key={header.id}>
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody>
+              {table.getRowModel().rows.map(row => (
+                <tr
+                  key={row.id}
+                  className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
+                >
+                  {row.getVisibleCells().map(cell => (
+                    <td
+                      key={cell.id}
+                      className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </Tab.Group>
     </main>
   )

@@ -197,7 +197,7 @@ const PassengerPage = ({ params }: Props) => {
           <div className='bg-white overflow-hidden shadow rounded-lg col-span-2 border h-full w-full'>
             <div className='px-4 py-5 sm:p-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                Hostorial de viajes
+                Historial de viajes
               </h3>
             </div>
 

@@ -56,6 +56,8 @@ export type Passenger = {
   phone: string
   email: string
   created_at: string
+
+  rides: number
 }
 
 export type OnlyName = {

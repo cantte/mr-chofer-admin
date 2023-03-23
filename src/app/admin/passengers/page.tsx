@@ -54,9 +54,14 @@ const PassengersPage: FC = () => {
         cell: info => info.getValue()
       },
       {
+        header: 'Número de carreras',
+        accessorKey: 'rides',
+        cell: info => info.getValue()
+      },
+      {
         header: 'Acciones',
         cell: info => (
-          <div className='flex items-center space-x-2'>
+          <div className='flex items-center space-x-3'>
             <a
               href={`https://wa.me/+57${info.row.original.phone}`}
               target='_blank'
@@ -76,7 +81,7 @@ const PassengersPage: FC = () => {
             </a>
 
             <NextLink href={`/admin/passengers/${info.row.original.id}`}>
-              <span className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-3 py-2 text-xs text-center dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600'>
+              <span className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-3.5 py-3 text-md text-center dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600'>
                 Ver
               </span>
             </NextLink>
@@ -169,7 +174,7 @@ const PassengersPage: FC = () => {
               {row.getVisibleCells().map(cell => (
                 <td
                   key={cell.id}
-                  className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
+                  className='px-3 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white'
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

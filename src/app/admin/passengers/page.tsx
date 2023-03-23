@@ -1,5 +1,7 @@
 'use client'
 
+import PhoneIcon from '@/components/icons/phone'
+import WhatsappIcon from '@/components/icons/whatsapp'
 import { type Passenger } from '@/types'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -10,12 +12,10 @@ import {
   type PaginationState
 } from '@tanstack/react-table'
 import axios from 'axios'
-import { useRouter } from 'next/navigation'
+import NextLink from 'next/link'
 import { useMemo, useState, type FC } from 'react'
 
 const PassengersPage: FC = () => {
-  const router = useRouter()
-
   const columns = useMemo<Array<ColumnDef<Passenger>>>(
     () => [
       {
@@ -52,6 +52,36 @@ const PassengersPage: FC = () => {
         header: 'Email',
         accessorKey: 'email',
         cell: info => info.getValue()
+      },
+      {
+        header: 'Acciones',
+        cell: info => (
+          <div className='flex items-center space-x-2'>
+            <a
+              href={`https://wa.me/+57${info.row.original.phone}`}
+              target='_blank'
+              className='px-2 py-1 text-sm font-medium leading-5 text-white hover:bg-slate-100 rounded-md'
+              rel='noreferrer'
+            >
+              <WhatsappIcon />
+            </a>
+
+            <a
+              href={`tel:${info.row.original.phone}`}
+              target='_blank'
+              className='px-2 py-1 text-sm font-medium leading-5 text-white hover:bg-slate-100 rounded-md'
+              rel='noreferrer'
+            >
+              <PhoneIcon />
+            </a>
+
+            <NextLink href={`/admin/passengers/${info.row.original.id}`}>
+              <span className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-3 py-2 text-xs text-center dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600'>
+                Ver
+              </span>
+            </NextLink>
+          </div>
+        )
       }
     ],
     []
@@ -133,9 +163,6 @@ const PassengersPage: FC = () => {
         <tbody>
           {table.getRowModel().rows.map(row => (
             <tr
-              onClick={() => {
-                router.push(`/admin/passengers/${row.original.id}`)
-              }}
               key={row.id}
               className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
             >

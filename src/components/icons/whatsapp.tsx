@@ -3,7 +3,7 @@ const WhatsappIcon = () => {
   return (
     <span>
       <svg
-        width='20xp'
+        width='20px'
         height='20px'
         viewBox='0 0 256 258'
         version='1.1'

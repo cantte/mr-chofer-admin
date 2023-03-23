@@ -104,3 +104,16 @@ export type RideHistory = {
     phone: string
   }
 }
+
+export type PassengerRideHistory = {
+  id: string
+
+  pickup_location: string
+  destination: string
+
+  gender: string
+
+  affiliate_id: string
+
+  status: string
+}

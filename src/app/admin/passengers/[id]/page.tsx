@@ -1,8 +1,10 @@
 'use client'
 
-import { type Passenger } from '@/types'
+import { type Passenger, type PassengerRideHistory } from '@/types'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import clsx from 'clsx'
+import NextLink from 'next/link'
 
 type Props = {
   params: {
@@ -18,6 +20,18 @@ const PassengerPage = ({ params }: Props) => {
       return data
     }
   )
+
+  const { data: rideHistory, isLoading: isLoadingRideHistory } = useQuery(
+    ['passengers', params.id, 'rideHistory'],
+    async () => {
+      const { data } = await axios.get<PassengerRideHistory[]>(
+        `/api/passengers/${params.id}/ride-history`
+      )
+      return data
+    }
+  )
+
+  console.log(rideHistory)
 
   return (
     <section>
@@ -202,14 +216,59 @@ const PassengerPage = ({ params }: Props) => {
             </div>
 
             <div className='border-t border-gray-200'>
-              <dl>
-                <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-                  <dt className='text-sm font-medium text-gray-500'>En contrucción</dt>
-                  <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-                    En construcción
-                  </dd>
+              {isLoadingRideHistory
+                ? (
+                <div className='flex justify-center items-center'>
+                  <div className='loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4'></div>
                 </div>
-              </dl>
+                  )
+                : (
+                <div className='bg-white overflow-hidden'>
+                  <ul>
+                    {rideHistory?.map(ride => (
+                      <li key={ride.id}>
+                        <NextLink
+                          href={`/admin/rides/${ride.id}`}
+                          className='block hover:bg-gray-50'
+                        >
+                          <div className='px-4 py-4 sm:px-6'>
+                            <div className='flex items-center justify-between'>
+                              <div className='flex flex-col'>
+                                <p className='text-sm truncate'>
+                                  Origen: {ride.pickup_location}
+                                </p>
+
+                                <p className='text-sm truncate'>
+                                  Destino: {ride.destination}
+                                </p>
+
+                                <p className='text-sm truncate'>
+                                  Genero: {ride.gender}
+                                </p>
+                              </div>
+                              <div className='ml-2 flex-shrink-0 flex'>
+                                <p
+                                  className={clsx(
+                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
+                                    ride.status === 'completed' &&
+                                    'bg-green-100 text-green-800',
+                                    ride.status === 'canceled' &&
+                                      'bg-red-100 text-red-800',
+                                    ride.status === 'ignored' &&
+                                      'bg-yellow-100 text-yellow-800'
+                                  )}
+                                >
+                                  {ride.status}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </NextLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                  )}
             </div>
           </div>
         </div>

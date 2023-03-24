@@ -43,6 +43,8 @@ export type Driver = {
 
   vehicles: Vehicle | null
   vehicle?: Vehicle
+
+  rides: number
 }
 
 export type Report = {

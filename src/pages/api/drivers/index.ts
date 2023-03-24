@@ -1,5 +1,5 @@
-import { type NextApiRequest, type NextApiResponse } from 'next'
 import { createServerSupabaseClient } from '@supabase/auth-helpers-nextjs'
+import { type NextApiRequest, type NextApiResponse } from 'next'
 
 const handler = async (
   req: NextApiRequest,
@@ -15,8 +15,8 @@ const handler = async (
     }
 
     const { status } = req.query
-    const { data, error } = await supabase.from('drivers')
-      .select('*, vehicles(*)')
+    const { data, error } = await supabase.from('drivers_with_email')
+      .select('*')
       .eq('status', status as string)
       .order('created_at', { ascending: false })
       .limit(20)

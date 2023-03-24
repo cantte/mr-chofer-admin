@@ -62,26 +62,9 @@ const AdminPage: FC = () => {
         cell: info => info.getValue()
       },
       {
-        header: 'Vehículo',
-        cell: info => {
-          const driver = info.row.original
-
-          if (driver.vehicles == null) {
-            return (
-              <span className='px-2 py-1 inline-flex text-md leading-5 font-semibold rounded-full bg-red-100 text-red-800'>
-                Sin vehículo
-              </span>
-            )
-          }
-
-          return (
-            <span className='px-2 py-1 inline-flex text-md leading-5 font-semibold rounded-full bg-green-100 text-green-800'>
-              {driver.vehicles.brand}, {driver.vehicles.line}{' '}
-              {driver.vehicles.model} - CC {driver.vehicles.engine_displacement}{' '}
-              - {driver.vehicles.license_plate}
-            </span>
-          )
-        }
+        header: 'Número de carreras',
+        accessorKey: 'rides',
+        cell: info => info.getValue()
       }
     ],
     []

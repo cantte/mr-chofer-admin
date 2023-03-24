@@ -1,5 +1,7 @@
 'use client'
 
+import PhoneIcon from '@/components/icons/phone'
+import WhatsappIcon from '@/components/icons/whatsapp'
 import { DriverStatus, type Driver } from '@/types'
 import { Tab } from '@headlessui/react'
 import { Inter } from '@next/font/google'
@@ -52,11 +54,6 @@ const AdminPage: FC = () => {
         cell: info => info.getValue()
       },
       {
-        header: 'Celular',
-        accessorKey: 'phone',
-        cell: info => info.getValue()
-      },
-      {
         header: 'Ciudad',
         accessorKey: 'city',
         cell: info => info.getValue()
@@ -65,6 +62,30 @@ const AdminPage: FC = () => {
         header: 'Número de carreras',
         accessorKey: 'rides',
         cell: info => info.getValue()
+      },
+      {
+        header: 'Acciones',
+        cell: info => (
+          <div className='flex items-center space-x-3'>
+            <a
+              href={`https://wa.me/+57${info.row.original.phone}`}
+              target='_blank'
+              className='px-2 py-1 text-sm font-medium leading-5 text-white hover:bg-slate-100 rounded-md'
+              rel='noreferrer'
+            >
+              <WhatsappIcon />
+            </a>
+
+            <a
+              href={`tel:${info.row.original.phone}`}
+              target='_blank'
+              className='px-2 py-1 text-sm font-medium leading-5 text-white hover:bg-slate-100 rounded-md'
+              rel='noreferrer'
+            >
+              <PhoneIcon />
+            </a>
+          </div>
+        )
       }
     ],
     []

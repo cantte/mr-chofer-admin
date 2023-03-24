@@ -28,6 +28,7 @@ const handler = async (
     }
 
     res.status(200).json(data[0])
+    return
   }
 
   res.status(405).json({ error: 'Method not allowed' })

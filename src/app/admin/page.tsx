@@ -15,6 +15,7 @@ import {
   type PaginationState
 } from '@tanstack/react-table'
 import axios from 'axios'
+import NextLink from 'next/link'
 import { useMemo, useState, type FC } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -76,6 +77,12 @@ const AdminPage: FC = () => {
             >
               <PhoneIcon />
             </a>
+
+            <NextLink href={`/admin/drivers/${info.row.original.id}`}>
+              <span className='text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg px-3.5 py-3 text-md text-center dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600'>
+                Ver
+              </span>
+            </NextLink>
           </div>
         )
       }

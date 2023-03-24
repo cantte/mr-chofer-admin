@@ -31,8 +31,6 @@ const PassengerPage = ({ params }: Props) => {
     }
   )
 
-  console.log(rideHistory)
-
   return (
     <section>
       <h1 className='text-4xl font-bold dark:text-gray-200 mb-10'>

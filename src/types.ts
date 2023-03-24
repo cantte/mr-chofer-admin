@@ -60,6 +60,8 @@ export type Passenger = {
   created_at: string
 
   rides: number
+
+  balance: number
 }
 
 export type OnlyName = {

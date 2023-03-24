@@ -27,23 +27,6 @@ const AdminPage: FC = () => {
   const columns = useMemo<Array<ColumnDef<Driver>>>(
     () => [
       {
-        header: 'Foto',
-        accessorKey: 'photo_url',
-        cell: info => {
-          return (
-            <div className='flex items-center'>
-              <div className='flex-shrink-0 h-20 w-20'>
-                <img
-                  className='h-20 w-20 rounded-full'
-                  src={info.getValue() as string}
-                  alt=''
-                />
-              </div>
-            </div>
-          )
-        }
-      },
-      {
         header: 'Cédula',
         accessorKey: 'id',
         cell: info => info.getValue()
@@ -57,6 +40,15 @@ const AdminPage: FC = () => {
         header: 'Ciudad',
         accessorKey: 'city',
         cell: info => info.getValue()
+      },
+      {
+        header: 'Saldo',
+        accessorKey: 'balance',
+        cell: info =>
+          Intl.NumberFormat('es-CO', {
+            style: 'currency',
+            currency: 'COP'
+          }).format(Number(info.getValue()))
       },
       {
         header: 'Número de carreras',
@@ -259,7 +251,7 @@ const AdminPage: FC = () => {
                   {row.getVisibleCells().map(cell => (
                     <td
                       key={cell.id}
-                      className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
+                      className='px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white'
                     >
                       {flexRender(
                         cell.column.columnDef.cell,

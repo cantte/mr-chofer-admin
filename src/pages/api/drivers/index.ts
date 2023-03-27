@@ -14,12 +14,15 @@ const handler = async (
       return
     }
 
-    const { status } = req.query
+    const { status, page, pageSize } = req.query
+    const rawPage = parseInt(page as string, 10)
+    const rawPageSize = parseInt(pageSize as string, 10)
+
     const { data, error } = await supabase.from('drivers_with_email')
       .select('*')
       .eq('status', status as string)
       .order('created_at', { ascending: false })
-      .limit(20)
+      .range(rawPage * rawPageSize, (rawPage + 1) * rawPageSize)
 
     if (error !== null) {
       res.status(500).json({ error: error.message })

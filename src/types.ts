@@ -113,12 +113,15 @@ export type RideHistory = {
 export type PassengerRideHistory = {
   id: string
 
+  request_time: string
   pickup_location: string
   destination: string
 
   gender: string
 
   affiliate_id: string
+
+  final_price: number
 
   status: string
 }

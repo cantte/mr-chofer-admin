@@ -233,6 +233,15 @@ const PassengerPage = ({ params }: Props) => {
                             <div className='flex items-center justify-between'>
                               <div className='flex flex-col'>
                                 <p className='text-sm truncate'>
+                                  Fecha:{' '}
+                                  {Intl.DateTimeFormat('es-CO', {
+                                    dateStyle: 'long',
+                                    timeStyle: 'short',
+                                    timeZone: 'America/Bogota'
+                                  }).format(new Date(ride.request_time))}
+                                </p>
+
+                                <p className='text-sm truncate'>
                                   Origen: {ride.pickup_location}
                                 </p>
 
@@ -243,13 +252,21 @@ const PassengerPage = ({ params }: Props) => {
                                 <p className='text-sm truncate'>
                                   Genero: {ride.gender}
                                 </p>
+
+                                <p className='text-sm truncate'>
+                                  Precio:{' '}
+                                  {Intl.NumberFormat('es-CO', {
+                                    style: 'currency',
+                                    currency: 'COP'
+                                  }).format(ride.final_price)}
+                                </p>
                               </div>
                               <div className='ml-2 flex-shrink-0 flex'>
                                 <p
                                   className={clsx(
                                     'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
                                     ride.status === 'completed' &&
-                                    'bg-green-100 text-green-800',
+                                      'bg-green-100 text-green-800',
                                     ride.status === 'canceled' &&
                                       'bg-red-100 text-red-800',
                                     ride.status === 'ignored' &&

@@ -18,7 +18,7 @@ const handler = async (
 
     const { data, error } = await supabase
       .from('ride_history')
-      .select('id, pickup_location, destination, gender, affiliate_id, status')
+      .select('id, request_time, pickup_location, destination, gender, affiliate_id, status, final_price')
       .eq('passenger_id', id)
 
     if (error !== null) {

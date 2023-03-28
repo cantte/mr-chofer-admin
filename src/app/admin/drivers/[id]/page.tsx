@@ -1,9 +1,11 @@
 'use client'
 
-import { DriverStatus, type Driver } from '@/types'
+import { DriverStatus, type Driver, type PassengerRideHistory } from '@/types'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import clsx from 'clsx'
+import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, type FC } from 'react'
 
@@ -108,6 +110,16 @@ const DriverPage: FC<Props> = ({ params }) => {
       status: DriverStatus.archived
     })
   }
+
+  const { data: rideHistory, isLoading: isLoadingRideHistory } = useQuery(
+    ['passengers', params.id, 'rideHistory'],
+    async () => {
+      const { data } = await axios.get<PassengerRideHistory[]>(
+        `/api/drivers/${params.id}/ride-history`
+      )
+      return data
+    }
+  )
 
   return (
     <section>
@@ -321,8 +333,81 @@ const DriverPage: FC<Props> = ({ params }) => {
           <div className='bg-white overflow-hidden shadow rounded-lg col-span-2 lg:col-span-4 border h-full w-full'>
             <div className='px-4 py-5 sm:p-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
-                Historial de viajes (En construcción)
+                Historial de viajes
               </h3>
+            </div>
+
+            <div className='border-t border-gray-200 max-h-[30rem] overflow-auto'>
+              {isLoadingRideHistory
+                ? (
+                <div className='flex justify-center items-center'>
+                  <div className='loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mb-4'></div>
+                </div>
+                  )
+                : (
+                <div className='bg-white overflow-hidden'>
+                  <ul>
+                    {rideHistory?.map(ride => (
+                      <li key={ride.id}>
+                        <NextLink
+                          href={`/admin/rides/${ride.id}`}
+                          className='block hover:bg-gray-50'
+                        >
+                          <div className='px-4 py-4 sm:px-6'>
+                            <div className='flex items-center justify-between'>
+                              <div className='flex flex-col'>
+                                <p className='text-sm truncate'>
+                                  Fecha:{' '}
+                                  {Intl.DateTimeFormat('es-CO', {
+                                    dateStyle: 'long',
+                                    timeStyle: 'short',
+                                    timeZone: 'America/Bogota'
+                                  }).format(new Date(ride.request_time))}
+                                </p>
+
+                                <p className='text-sm truncate'>
+                                  Origen: {ride.pickup_location}
+                                </p>
+
+                                <p className='text-sm truncate'>
+                                  Destino: {ride.destination}
+                                </p>
+
+                                <p className='text-sm truncate'>
+                                  Genero: {ride.gender}
+                                </p>
+
+                                <p className='text-sm truncate'>
+                                  Precio:{' '}
+                                  {Intl.NumberFormat('es-CO', {
+                                    style: 'currency',
+                                    currency: 'COP'
+                                  }).format(ride.final_price)}
+                                </p>
+                              </div>
+                              <div className='ml-2 flex-shrink-0 flex'>
+                                <p
+                                  className={clsx(
+                                    'px-2 inline-flex text-xs leading-5 font-semibold rounded-full',
+                                    ride.status === 'completed' &&
+                                      'bg-green-100 text-green-800',
+                                    ride.status === 'canceled' &&
+                                      'bg-red-100 text-red-800',
+                                    ride.status === 'ignored' &&
+                                      'bg-yellow-100 text-yellow-800'
+                                  )}
+                                >
+                                  {ride.status}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </NextLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                  )}
             </div>
           </div>
         </div>

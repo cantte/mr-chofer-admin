@@ -1,9 +1,10 @@
 'use client'
 
-import { type Driver } from '@/types'
+import { DriverStatus, type Driver } from '@/types'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
-import { useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import { useEffect, useState, type FC } from 'react'
 
 type Props = {
@@ -22,7 +23,30 @@ const DriverPage: FC<Props> = ({ params }) => {
   )
 
   const [avatar, setAvatar] = useState<string | null>(null)
-  const [idPhotoUrlBack, setIdPhotoUrlBack] = useState<string | null>(null)
+  const [signedUrls, setSignedUrls] = useState<string[]>([])
+
+  const loadDocumentsUrls = async (documents: string[]) => {
+    if (documents.length === 0) {
+      return
+    }
+
+    try {
+      const { data, error } = await supabase.storage
+        .from('documents')
+        .createSignedUrls(documents, 3600)
+
+      if (error !== null) {
+        throw error
+      }
+
+      const urls = data?.map(d => d.signedUrl)
+
+      setSignedUrls(urls)
+    } catch (error) {
+      console.log('Error downloading image: ', error)
+    }
+  }
+
   const supabase = useSupabaseClient()
   useEffect(() => {
     if (driver === undefined) {
@@ -38,17 +62,52 @@ const DriverPage: FC<Props> = ({ params }) => {
       .data.publicUrl
     setAvatar(url)
 
-    supabase.storage
-      .from('documents')
-      .createSignedUrl(driver.id_photo_url_back, 60 * 60 * 24)
-      .then(({ data, error }) => {
-        if (error != null) {
-          console.error(error)
-          return
-        }
-        setIdPhotoUrlBack(data.signedUrl)
-      })
+    void loadDocumentsUrls([
+      driver.id_photo_url_front,
+      driver.id_photo_url_back,
+      driver.license_photo_url_front,
+      driver.license_photo_url_back,
+      driver.vehicles?.property_card_photo_url_front ?? '',
+      driver.vehicles?.property_card_photo_url_back ?? '',
+      driver.contract_url ?? '',
+      driver.notary_power_url ?? ''
+    ])
   }, [driver])
+
+  const router = useRouter()
+  const { mutate } = useMutation(
+    async (data: { driver_id: string, status: DriverStatus }) => {
+      await axios.post(
+        `/api/drivers/process/${data.driver_id}?status=${data.status}`
+      )
+    },
+    {
+      onSuccess: () => {
+        router.push('/admin')
+      }
+    }
+  )
+
+  const performAccept = () => {
+    mutate({
+      driver_id: driver?.id ?? '',
+      status: DriverStatus.accepted
+    })
+  }
+
+  const performReject = () => {
+    mutate({
+      driver_id: driver?.id ?? '',
+      status: DriverStatus.rejected
+    })
+  }
+
+  const performArchive = () => {
+    mutate({
+      driver_id: driver?.id ?? '',
+      status: DriverStatus.archived
+    })
+  }
 
   return (
     <section>
@@ -118,10 +177,68 @@ const DriverPage: FC<Props> = ({ params }) => {
                 <dl>
                   <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
                     <dt className='text-sm font-medium text-gray-500'>
-                      <a href={idPhotoUrlBack ?? ''} target='_blank' rel='noreferrer'>
+                      <a
+                        href={signedUrls.at(0) ?? ''}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        Ver foto de cédula (Frente)
+                      </a>
+                    </dt>
+
+                    <dt className='text-sm font-medium text-gray-500'>
+                      <a
+                        href={signedUrls.at(1) ?? ''}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
                         Ver foto de cédula (Atras)
                       </a>
                     </dt>
+
+                    <dt className='text-sm font-medium text-gray-500'>
+                      <a
+                        href={signedUrls.at(2) ?? ''}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        Ver foto de licencia (Frente)
+                      </a>
+                    </dt>
+
+                    <dt className='text-sm font-medium text-gray-500'>
+                      <a
+                        href={signedUrls.at(3) ?? ''}
+                        target='_blank'
+                        rel='noreferrer'
+                      >
+                        Ver foto de licencia (Atras)
+                      </a>
+                    </dt>
+
+                    {driver.contract_url !== null && (
+                      <dt className='text-sm font-medium text-gray-500'>
+                        <a
+                          href={signedUrls.at(6) ?? ''}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          Ver contrato
+                        </a>
+                      </dt>
+                    )}
+
+                    {driver.notary_power_url !== null && (
+                      <dt className='text-sm font-medium text-gray-500'>
+                        <a
+                          href={signedUrls.at(7) ?? ''}
+                          target='_blank'
+                          rel='noreferrer'
+                        >
+                          Ver poder notarial
+                        </a>
+                      </dt>
+                    )}
                   </div>
                 </dl>
               </div>
@@ -144,12 +261,60 @@ const DriverPage: FC<Props> = ({ params }) => {
 
             <div className='border-t border-gray-200'>
               <dl>
-                <div className='bg-gray-50 px-4 py-5'>
+                <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
                   <dt className='text-sm font-medium text-gray-500'>
-                    Ver foto tarjeta de propiedad (En construcción)
+                    <a
+                      href={signedUrls.at(4) ?? ''}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      Ver foto de tarjeta de propiedad (Frente)
+                    </a>
+                  </dt>
+
+                  <dt className='text-sm font-medium text-gray-500'>
+                    <a
+                      href={signedUrls.at(5) ?? ''}
+                      target='_blank'
+                      rel='noreferrer'
+                    >
+                      Ver foto de tarjeta de propiedad (Atras)
+                    </a>
                   </dt>
                 </div>
               </dl>
+            </div>
+
+            <div className='px-4 py-5 sm:p-6'>
+              <h3 className='text-lg leading-6 font-medium text-gray-900'>
+                Acciones
+              </h3>
+            </div>
+
+            <div className='border-t border-gray-200'>
+              <div className='px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
+                <button
+                  onClick={performAccept}
+                  disabled={isLoading}
+                  className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
+                >
+                  Aceptar
+                </button>
+                <button
+                  onClick={performReject}
+                  disabled={isLoading}
+                  className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
+                >
+                  Rechazar
+                </button>
+                <button
+                  onClick={performArchive}
+                  disabled={isLoading}
+                  className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 focus:bg-yellow-600 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
+                >
+                  Archivar
+                </button>
+              </div>
             </div>
           </div>
 

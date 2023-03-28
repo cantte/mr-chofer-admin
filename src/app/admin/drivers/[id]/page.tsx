@@ -318,7 +318,7 @@ const DriverPage: FC<Props> = ({ params }) => {
             </div>
           </div>
 
-          <div className='bg-white overflow-hidden shadow rounded-lg col-span-4 border h-full w-full'>
+          <div className='bg-white overflow-hidden shadow rounded-lg col-span-2 lg:col-span-4 border h-full w-full'>
             <div className='px-4 py-5 sm:p-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
                 Historial de viajes (En construcción)

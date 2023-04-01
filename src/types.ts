@@ -13,6 +13,7 @@ export type Vehicle = {
   line: string
   color: string
   type: string
+  owner_id: string
 
   property_card_photo_url_front: string
   property_card_photo_url_back: string

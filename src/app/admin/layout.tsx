@@ -17,6 +17,7 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
     onSuccess: () => {
       router.replace('/')
       router.refresh()
+      window.location.reload()
     }
   })
 

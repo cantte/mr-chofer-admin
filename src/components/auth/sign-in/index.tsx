@@ -2,11 +2,11 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { type FC } from 'react'
-import { useForm, type SubmitHandler } from 'react-hook-form'
+import { type FC, useEffect } from 'react'
+import { type SubmitHandler, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 
 const SignInSchema = z.object({
   email: z.string().email('El email no es válido'),
@@ -18,6 +18,14 @@ type SignInFormValues = z.infer<typeof SignInSchema>
 const SignInForm: FC = () => {
   const router = useRouter()
 
+  const session = useSession()
+  useEffect(() => {
+    if (session != null) {
+      router.replace('/admin')
+      router.refresh()
+    }
+  }, [session])
+
   const {
     register,
     handleSubmit,
@@ -26,13 +34,19 @@ const SignInForm: FC = () => {
     resolver: zodResolver(SignInSchema)
   })
 
+  const supabase = useSupabaseClient()
   const { mutate, isLoading } = useMutation(async (data: SignInFormValues) => {
-    const { data: response } = await axios.post('/api/auth/sign-in', data)
+    const { data: response } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password
+    })
+
     return response
   }, {
     onSuccess: () => {
       router.replace('/admin')
       router.refresh()
+      window.location.reload()
     }
   })
 

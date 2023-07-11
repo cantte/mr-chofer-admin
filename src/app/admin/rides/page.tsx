@@ -42,25 +42,29 @@ const RidesPage: FC = () => {
         cell: info => info.getValue()
       },
       {
-        header: 'Genero',
-        accessorKey: 'gender',
-        cell: info => (info.getValue() === 'Male' ? 'Hombre' : 'Mujer')
-      },
-      {
         header: 'Conductor',
         accessorKey: 'drivers.name',
         cell: info => info.getValue() ?? 'No disponible'
-      },
-      {
-        header: 'Aliado',
-        accessorKey: 'affiliate_id',
-        cell: info => (info.getValue() !== null ? 'Sí' : 'No')
       },
       {
         header: 'Estado',
         accessorKey: 'status',
         cell: info =>
           info.getValue() !== null ? info.getValue() : 'No disponible'
+      },
+      {
+        id: 'actions',
+        cell: info => (
+          <button
+            onClick={e => {
+              e.stopPropagation()
+              router.push(`/admin/rides/${info.row.original.id}`)
+            }}
+            className='text-blue-500 hover:text-blue-700'
+          >
+            Ver
+          </button>
+        )
       }
     ],
     []
@@ -124,45 +128,44 @@ const RidesPage: FC = () => {
       </h1>
 
       <div className='relative overflow-x-auto'>
-        <table className='w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-auto'>
-          <thead className='text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th scope='col' className='px-6 py-3' key={header.id}>
-                    {flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
+        <table
+          className='w-full text-sm text-left text-gray-500 dark:text-gray-400 overflow-auto'>
+          <thead
+            className='text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400'>
+          {table.getHeaderGroups().map(headerGroup => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map(header => (
+                <th scope='col' className='px-6 py-3' key={header.id}>
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
           </thead>
           <tbody>
-            {table.getRowModel().rows.map(row => (
-              <tr
-                onClick={() => {
-                  router.push(`/admin/rides/${row.original.id}`)
-                }}
-                key={row.id}
-                className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
-              >
-                {row.getVisibleCells().map(cell => (
-                  <td
-                    key={cell.id}
-                    className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
+          {table.getRowModel().rows.map(row => (
+            <tr
+              key={row.id}
+              className='bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600'
+            >
+              {row.getVisibleCells().map(cell => (
+                <td
+                  key={cell.id}
+                  className='px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white'
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </td>
+              ))}
+            </tr>
+          ))}
           </tbody>
         </table>
       </div>
 
-      <div className='h-2' />
+      <div className='h-2'/>
 
       <nav aria-label='Page navigation example'>
         <ul className='inline-flex items-center -space-x-px'>

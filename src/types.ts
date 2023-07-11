@@ -109,6 +109,12 @@ export type RideHistory = {
     vehicles: Vehicle
     phone: string
   }
+
+  rides: {
+    driver_ratings: Array<{
+      rating: number
+    }>
+  }
 }
 
 export type PassengerRideHistory = {

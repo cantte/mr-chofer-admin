@@ -1,21 +1,34 @@
 'use client'
 
 import { useMutation } from '@tanstack/react-query'
-import axios from 'axios'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
-import { type FC, type PropsWithChildren } from 'react'
+import { type FC, type PropsWithChildren, useEffect } from 'react'
+import { useSupabaseClient, useSession } from '@supabase/auth-helpers-react'
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
+  const supabase = useSupabaseClient()
+  const router = useRouter()
+
   const { mutate } = useMutation(async () => {
-    const { data } = await axios.post('/api/auth/sign-out')
-    return data
+    const { error } = await supabase.auth.signOut()
+    if (error != null) throw error
+  }, {
+    onSuccess: () => {
+      router.replace('/')
+      router.refresh()
+    }
   })
 
-  const router = useRouter()
+  const session = useSession()
+  useEffect(() => {
+    if (session == null) {
+      router.replace('/')
+    }
+  }, [session])
+
   const signOut = async () => {
     mutate()
-    router.refresh()
   }
 
   return (

@@ -2,21 +2,21 @@
 
 import PhoneIcon from '@/components/icons/phone'
 import WhatsappIcon from '@/components/icons/whatsapp'
-import { DriverStatus, type Driver } from '@/types'
+import { type Driver, DriverStatus } from '@/types'
 import { Tab } from '@headlessui/react'
 import { Inter } from '@next/font/google'
 import { useSupabaseClient } from '@supabase/auth-helpers-react'
 import { useQuery } from '@tanstack/react-query'
 import {
+  type ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
-  type ColumnDef,
-  type PaginationState
+  type PaginationState,
+  useReactTable
 } from '@tanstack/react-table'
 import axios from 'axios'
 import NextLink from 'next/link'
-import { useMemo, useState, type FC } from 'react'
+import { type FC, useMemo, useState } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -43,13 +43,10 @@ const AdminPage: FC = () => {
         cell: info => info.getValue()
       },
       {
-        header: 'Saldo',
-        accessorKey: 'balance',
-        cell: info =>
-          Intl.NumberFormat('es-CO', {
-            style: 'currency',
-            currency: 'COP'
-          }).format(Number(info.getValue()))
+        id: 'rating',
+        header: 'Calificación',
+        accessorKey: 'rating',
+        cell: info => info.getValue()
       },
       {
         header: 'Número de carreras',
@@ -158,11 +155,6 @@ const AdminPage: FC = () => {
     manualPagination: true,
     debugTable: true
   })
-
-  // const queryClient = useQueryClient()
-  // const onUpdated = async () => {
-  //  await queryClient.refetchQueries(['drivers', filter])
-  // }
 
   return (
     <main className={inter.className}>

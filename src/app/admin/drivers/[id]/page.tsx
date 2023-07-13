@@ -60,9 +60,17 @@ const DriverPage: FC<Props> = ({ params }) => {
       return
     }
 
-    const url = supabase.storage.from('avatars').getPublicUrl(driver.photo_url)
-      .data.publicUrl
-    setAvatar(url)
+    const url = supabase.storage
+      .from('avatars')
+      .createSignedUrl(driver.photo_url, 3600)
+
+    url.then(({ data, error }) => {
+      if (error !== null) {
+        throw error
+      }
+
+      setAvatar(data?.signedUrl ?? null)
+    })
 
     void loadDocumentsUrls([
       driver.id_photo_url_front,
@@ -275,11 +283,11 @@ const DriverPage: FC<Props> = ({ params }) => {
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
                 Vehículo{' '}
                 {driver?.vehicles !== null
-                  ? `${driver?.vehicles.license_plate ?? ''}, ${
+                  ? `(${driver?.vehicles.license_plate ?? ''}) (${
                       driver?.vehicles.brand ?? ''
-                    } ${driver?.vehicles.line ?? ''} ${
+                    }) (${driver?.vehicles.line ?? ''}) (${
                       driver?.vehicles.model ?? ''
-                    } - CC ${driver?.vehicles.engine_displacement ?? ''}`
+                    }) (CC ${driver?.vehicles.engine_displacement ?? ''})`
                   : 'No disponible'}
               </h3>
             </div>
@@ -311,17 +319,17 @@ const DriverPage: FC<Props> = ({ params }) => {
             </div>
 
             <div className='border-t border-gray-200'>
-                <dl>
-                  <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-                    <dt className='text-sm font-medium text-gray-500'>
-                      Número de cédula en la tarjeta de propiedad
-                    </dt>
-                    <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
-                      {driver.vehicles?.owner_id ?? 'No disponible'}
-                    </dd>
-                  </div>
-                </dl>
-              </div>
+              <dl>
+                <div className='bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
+                  <dt className='text-sm font-medium text-gray-500'>
+                    Número de cédula en la tarjeta de propiedad
+                  </dt>
+                  <dd className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
+                    {driver.vehicles?.owner_id ?? 'No disponible'}
+                  </dd>
+                </div>
+              </dl>
+            </div>
 
             <div className='px-4 py-5 sm:p-6'>
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
@@ -331,27 +339,33 @@ const DriverPage: FC<Props> = ({ params }) => {
 
             <div className='border-t border-gray-200'>
               <div className='px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6'>
-                <button
-                  onClick={performAccept}
-                  disabled={isLoading}
-                  className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
-                >
-                  Aceptar
-                </button>
-                <button
-                  onClick={performReject}
-                  disabled={isLoading}
-                  className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
-                >
-                  Rechazar
-                </button>
-                <button
-                  onClick={performArchive}
-                  disabled={isLoading}
-                  className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 focus:bg-yellow-600 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
-                >
-                  Archivar
-                </button>
+                {driver.status !== DriverStatus.accepted && (
+                  <button
+                    onClick={performAccept}
+                    disabled={isLoading}
+                    className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 focus:bg-blue-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
+                  >
+                    Aceptar
+                  </button>
+                )}
+                {driver.status !== DriverStatus.rejected && (
+                  <button
+                    onClick={performReject}
+                    disabled={isLoading}
+                    className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-red-600 text-white hover:bg-red-700 focus:bg-red-700 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
+                  >
+                    Rechazar
+                  </button>
+                )}
+                {driver.status !== DriverStatus.archived && (
+                  <button
+                    onClick={performArchive}
+                    disabled={isLoading}
+                    className='px-3 py-2 text-sm font-medium mt-2 rounded-lg bg-yellow-500 text-white hover:bg-yellow-600 focus:bg-yellow-600 focus:ring-0 outline-none w-full disabled:bg-gray-100 disabled:text-gray-400 disabled:cursor-not-allowed'
+                  >
+                    Archivar
+                  </button>
+                )}
               </div>
             </div>
           </div>

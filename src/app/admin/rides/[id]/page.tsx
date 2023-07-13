@@ -487,7 +487,7 @@ const RideDetails = (props: Props) => {
                     <dd
                       className='mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2'>
                       {
-                        (data !== undefined && data.rides.driver_ratings.length > 0) ? data.rides.driver_ratings[0].rating : 'No disponible'
+                        (data !== undefined && data.rides?.driver_ratings?.length > 0) ? data.rides.driver_ratings[0].rating : 'No disponible'
                       }
                     </dd>
                   </div>

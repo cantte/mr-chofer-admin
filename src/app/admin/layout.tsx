@@ -3,8 +3,8 @@
 import { useMutation } from '@tanstack/react-query'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
-import { type FC, type PropsWithChildren } from 'react'
-import { useSupabaseClient } from '@supabase/auth-helpers-react'
+import { type FC, type PropsWithChildren, useEffect } from 'react'
+import { useSession, useSupabaseClient } from '@supabase/auth-helpers-react'
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   const supabase = useSupabaseClient()
@@ -16,14 +16,24 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   }, {
     onSuccess: () => {
       router.replace('/')
-      router.refresh()
-      window.location.reload()
     }
   })
 
   const signOut = async () => {
     mutate()
   }
+
+  const session = useSession()
+
+  useEffect(() => {
+    supabase.auth.getSession().then(session => {
+      if (session.data === null) {
+        console.log('No session in supabase')
+        router.replace('/')
+      }
+      console.log('Session in supabase', session.data)
+    })
+  }, [session, supabase])
 
   return (
     <main className='lg:overflow-x-hidden'>

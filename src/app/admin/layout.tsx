@@ -3,8 +3,8 @@
 import { useMutation } from '@tanstack/react-query'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
-import { type FC, type PropsWithChildren, useEffect } from 'react'
-import { useSupabaseClient, useSession } from '@supabase/auth-helpers-react'
+import { type FC, type PropsWithChildren } from 'react'
+import { useSupabaseClient } from '@supabase/auth-helpers-react'
 
 const RootLayout: FC<PropsWithChildren> = ({ children }) => {
   const supabase = useSupabaseClient()
@@ -20,13 +20,6 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
       window.location.reload()
     }
   })
-
-  const session = useSession()
-  useEffect(() => {
-    if (session == null) {
-      router.replace('/')
-    }
-  }, [session])
 
   const signOut = async () => {
     mutate()

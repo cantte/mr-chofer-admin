@@ -20,9 +20,8 @@ const SignInForm: FC = () => {
 
   const session = useSession()
   useEffect(() => {
-    if (session != null) {
+    if (session !== null) {
       router.replace('/admin')
-      router.refresh()
     }
   }, [session])
 

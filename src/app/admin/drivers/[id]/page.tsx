@@ -8,6 +8,7 @@ import clsx from 'clsx'
 import NextLink from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState, type FC } from 'react'
+import WhatsappIcon from '@/components/icons/whatsapp'
 
 type Props = {
   params: {
@@ -283,11 +284,13 @@ const DriverPage: FC<Props> = ({ params }) => {
               <h3 className='text-lg leading-6 font-medium text-gray-900'>
                 Vehículo{' '}
                 {driver?.vehicles !== null
-                  ? `(${driver?.vehicles.license_plate ?? ''}) (${
+                  ? `Placa(${driver?.vehicles.license_plate ?? ''}) Marca(${
                       driver?.vehicles.brand ?? ''
-                    }) (${driver?.vehicles.line ?? ''}) (${
+                    }) Línea(${driver?.vehicles.line ?? ''}) Modelo(${
                       driver?.vehicles.model ?? ''
-                    }) (CC ${driver?.vehicles.engine_displacement ?? ''})`
+                    }) Color(${driver?.vehicles.color ?? ''}) Cilindraje(CC ${
+                      driver?.vehicles.engine_displacement ?? ''
+                    })`
                   : 'No disponible'}
               </h3>
             </div>
@@ -366,6 +369,22 @@ const DriverPage: FC<Props> = ({ params }) => {
                     Archivar
                   </button>
                 )}
+              </div>
+
+              <div className="mt-3 flex flex-row justify-start px-3 items-center w-full">
+                <a
+                  href={`https://wa.me/+57${driver.phone}`}
+                  target='_blank'
+                  className='flex flex-row space-x-5 items-center px-2 py-1 text-sm border border-gray-200 font-medium leading-5 hover:bg-slate-100 rounded-md w-full'
+                  rel='noreferrer'
+                >
+                  <span>
+                    Contactar por Whatsapp
+                  </span>
+                  <span>
+                    <WhatsappIcon />
+                  </span>
+                </a>
               </div>
             </div>
           </div>
